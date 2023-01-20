@@ -1,0 +1,209 @@
+* {
+    transition: all .2s;
+}
+
+#content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+ion-header {
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--actual-type-color-text);
+    background: var(--actual-type-color);
+    & img {
+        width: 12vh;
+        height: 12vh;
+        filter: drop-shadow(0px 2px 6px #000);
+    }
+    & span {
+        font-size: 3vh;
+    }
+}
+
+/*
+ion-content::part(background) {
+    background: var(--actual-type-color) !important
+}
+*/
+
+ion-virtual-scroll {
+    margin-top: 4.5vh
+}
+
+ion-back-button {
+    color: none !important;
+}
+
+ion-card-header {
+    display: flex;
+    flex-flow: column-reverse;
+}
+
+.location {
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    padding: 1vh 0vh;
+    margin: 0.75vh 0vh;
+}
+
+.location-card-header {
+    display: flex;
+    align-items: center;
+    & ion-card-title {
+        border-bottom: 1px groove;
+        padding: 0vh 2.5vh 1vh 2.5vh;
+        text-align: center;
+    }
+}
+
+.version-detail {
+    width: 100%;
+    filter: drop-shadow(0px 0px 0px black);
+    & ion-card-header {
+        display: flex;
+        align-self: flex-start;
+        align-items: flex-start;
+        & ion-card-title {
+            display: flex;
+            align-items: center;
+            & img {
+                width: 4vh;
+                height: 4vh;
+                margin-right: 0.5vh;
+            }
+        }
+    }
+}
+
+.encounter-detail-text {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.conditions {
+    margin-top: 1vh;
+    & span {
+        border-bottom: 1px groove;
+        padding: 0.5vh 0vh;
+    }
+    & div {
+        margin: 1vh 0vh 1vh 1vh;
+    }
+}
+
+//? Error no encounters
+.error-no-encounters {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* margin: 24vh 0vh; */
+    /* filter: drop-shadow(0px 0px 6px var(--actual-type-color-text)); */
+    color: var(--ion-color-danger);
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    & ion-icon {
+        width: 16vh;
+        height: 16vh;
+        margin: 1vh;
+        filter: drop-shadow(0px 0px 2px var(--ion-color-danger-contrast));
+    }
+    & span {
+        font-size: 3.6vh;
+        font-weight: 800;
+        font-family: "pokemon xy";
+        text-align: center;
+        max-width: 48vh;
+        filter: drop-shadow(0px 0px 2px var(--ion-color-danger-contrast));
+    }
+}
+
+.swiper-pagination-fraction, .swiper-pagination-custom, .swiper-horizontal > .swiper-pagination-bullets, .swiper-pagination-bullets.swiper-pagination-horizontal {
+    bottom: -6px !important;
+}
+
+.locations-content {
+    display: flex;
+    align-items: center;
+    & swiper {
+        width: 100%;
+        margin: 0;
+        padding-bottom: 4vh;
+    }
+    & .swiper-controller {
+        height: 3vh;
+        width: 3vh;
+    }
+}
+
+.max-chance-text {
+    display: flex;
+    justify-content: center;
+    & span {
+        margin: 0vh 0.5vh;  
+    }
+}
+
+//? Loading
+.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 32vh 0vh;
+}
+
+.loading ion-icon {
+    width: 16vh;
+    height: 16vh;
+    margin: 1vh;
+    animation-name: loadingPokeball;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+.loading div {
+    font-size: 3.6vh;
+    font-weight: 800;
+    font-family: 'pokemon xy';
+    &:after {
+        content: 'Cargando';
+        animation-name: loadingTxt;
+        animation-duration: 1s;
+        animation-iteration-count: infinite;
+    }
+}
+
+//? Animations
+@keyframes loadingTxt {
+    0%, 25% { content: 'Cargando.'}
+    50% { content: 'Cargando..'}
+    75% { content: 'Cargando...'}
+    100% { content: 'Cargando'}
+}
+
+@keyframes loadingPokeball {
+    0%, 10% { transform: rotate(0deg); }
+    15% { transform: rotate(22.5deg); }
+    20% { transform: rotate(45deg); }
+    25% { transform: rotate(67.5deg); }
+    30% { transform: rotate(90deg); }
+    35% { transform: rotate(112.5deg); }
+    40% { transform: rotate(135deg); }
+    45% { transform: rotate(157.5deg); }
+    50% { transform: rotate(180deg); }
+    55% { transform: rotate(202.5deg); }
+    60% { transform: rotate(225deg); }
+    65% { transform: rotate(247.5deg); }
+    70% { transform: rotate(270deg); }
+    75% { transform: rotate(292.5deg); }
+    80% { transform: rotate(315deg); }
+    85% { transform: rotate(337.5deg); }
+    90%, 100% { transform: rotate(360deg); }
+}

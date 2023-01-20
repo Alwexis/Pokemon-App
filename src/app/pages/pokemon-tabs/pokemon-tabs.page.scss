@@ -1,0 +1,22 @@
+@import './../../app.component.scss';
+
+ion-header {
+    position: initial !important;
+}
+
+ion-toolbar {
+    --opacity: 0;
+    --border-width: 0;
+}
+
+ion-back-button {
+    color: var(--actual-type-color-text);
+}
+
+ion-tab-bar {
+    padding: 1vh;
+}
+
+ion-tab-button {
+    font-size: 2vh;
+}

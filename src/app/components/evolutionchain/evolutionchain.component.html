@@ -1,0 +1,109 @@
+<section id="main" *ngIf="!loading else Loading;">
+  <section id="evolution-chain-container" *ngIf="formatedEvolutionChain.length > 0 else noEvolutionChain;">
+    <ion-list class="evolutions-container" *ngFor="let evolutionChain of formatedEvolutionChain">
+      <div class="evolution-pokemon-container">
+        <span class="pkm-container-title">{{ evolutionChain.name }}</span>
+        <div class="pkmn-container-body">
+          <img class="pokemon-image" src="{{evolutionChain.data.sprites.other.home.front_default}}">
+          <div class="pkm-container-info">
+            <p>Height: {{ evolutionChain.data.height }}</p>
+            <p>Weight: {{ evolutionChain.data.weight }}</p>
+            <p>Base Experience: {{ evolutionChain.data.base_experience }}</p>
+          </div>
+        </div>
+      </div>
+      <!--? Checking if has a second evolution -->
+      <section style="width: 100% !important;" *ngIf="evolutionChain.evolution.length > 0">
+        <swiper style="padding-bottom: 4vh;" [autoplay]="true" [pagination]="true" (swiper)="setSwiperInstance($event)">
+          <ng-template swiperSlide *ngFor="let secondSlabon of evolutionChain.evolution">
+            <section
+              style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100% !important">
+              <div class="evolution-details">
+                <ion-icon name="arrow-down-outline"></ion-icon>
+                <section class="evolution-details-info">
+                  <div class="evolution-trigger-container">
+                    <span class="evolution-detail-title">Trigger: </span>
+                    <p class="evolution-detail-value">{{secondSlabon.trigger.replace('-', ' ').replace('_', ' ')}}</p>
+                  </div>
+                  <div class="evolution-details-container">
+                    <div *ngFor="let detail of secondSlabon.details">
+                      <span class="evolution-detail-title">{{detail.name.replace('-', ' ').replace('_', ' ')}}: </span>
+                      <p class="evolution-detail-value">{{detail.value}}</p>
+                    </div>
+                  </div>
+                </section>
+              </div>
+              <section class="evolution-container">
+                <div class="evolution-pokemon-container">
+                  <span class="pkm-container-title">{{ secondSlabon.name }}</span>
+                  <div class="pkmn-container-body">
+                    <img class="pokemon-image" src="{{secondSlabon.data.sprites.other.home.front_default}}">
+                    <div class="pkm-container-info">
+                      <p>Height: {{ secondSlabon.data.height }}</p>
+                      <p>Weight: {{ secondSlabon.data.weight }}</p>
+                      <p>Base Experience: {{ secondSlabon.data.base_experience }}</p>
+                    </div>
+                  </div>
+                </div>
+                <!--? Checking if has a third evolution -->
+                <section style="width: 100% !important;" *ngIf="secondSlabon.evolution.length > 0">
+                  <swiper style="padding-bottom: 4vh;" [autoplay]="true" [pagination]="true">
+                    <ng-template swiperSlide *ngFor="let thirdSlabon of secondSlabon.evolution">
+                      <div style="display: flex; flex-direction: column; align-items: center; width: 100% !important;">
+                        <div class="evolution-details">
+                          <ion-icon name="arrow-down-outline"></ion-icon>
+                          <section class="evolution-details-info">
+                            <div class="evolution-trigger-container">
+                              <span class="evolution-detail-title">Trigger: </span>
+                              <p class="evolution-detail-value">{{thirdSlabon.trigger.replace('-', ' ').replace('_', '
+                                ')}}</p>
+                            </div>
+                            <div class="evolution-details-container">
+                              <div *ngFor="let detail of thirdSlabon.details">
+                                <span class="evolution-detail-title">{{detail.name.replace('-', ' ').replace('_', '
+                                  ')}}:
+                                </span>
+                                <p class="evolution-detail-value">{{detail.value}}</p>
+                              </div>
+                            </div>
+                          </section>
+                        </div>
+                        <div class="evolution-pokemon-container">
+                          <span class="pkm-container-title">{{ thirdSlabon.name }}</span>
+                          <div class="pkmn-container-body">
+                            <img class="pokemon-image" src="{{thirdSlabon.data.sprites.other.home.front_default}}">
+                            <div class="pkm-container-info">
+                              <p>Height: {{ thirdSlabon.data.height }}</p>
+                              <p>Weight: {{ thirdSlabon.data.weight }}</p>
+                              <p>Base Experience: {{ thirdSlabon.data.base_experience }}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </swiper>
+                </section>
+              </section>
+            </section>
+          </ng-template>
+        </swiper>
+      </section>
+    </ion-list>
+  </section>
+  <ng-template #noEvolutionChain>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>No Evolution Chain</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p>This Pokemon has no evolution chain.</p>
+      </ion-card-content>
+    </ion-card>
+  </ng-template>
+</section>
+<ng-template #Loading>
+  <div class="loading">
+    <ion-icon src="./../../../assets/icons/pokeball.svg"></ion-icon>
+    <div></div>
+  </div>
+</ng-template>

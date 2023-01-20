@@ -1,0 +1,33 @@
+<ion-header [translucent]="true">
+  <ion-toolbar mode="ios" translucent>
+    <ion-buttons class="ion-padding" default-href="/" slot="start">
+      <ion-back-button text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title></ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-tabs (ionTabsWillChange)="tabChange($event)">
+  <ion-tab-bar selected-tab="tab2" mode="ios" slot="bottom">
+    <ion-tab-button [disabled]="loading" tab="entries">
+      <ion-icon name="albums"></ion-icon>
+      <ion-label class="label-entries">Entries</ion-label>
+    </ion-tab-button>
+    <ion-tab-button [disabled]="!hasEvolution || loading" tab="evolution-chain">
+      <ion-icon name="analytics"></ion-icon>
+      <ion-label class="label-evolution-chain">Evolutions</ion-label>
+    </ion-tab-button>
+    <ion-tab-button [disabled]="loading" tab="pokemon">
+      <ion-icon style="width: 6vh; height: 6vh;" src="./../../../assets/icons/pokeball.svg"></ion-icon>
+      <ion-label class="label-pokemon">Information</ion-label>
+    </ion-tab-button>
+    <ion-tab-button [disabled]="loading" tab="moves">
+      <ion-icon name="list"></ion-icon>
+      <ion-label class="label-moves">Moves</ion-label>
+    </ion-tab-button>
+    <ion-tab-button [disabled]="loading" tab="location">
+      <ion-icon name="location"></ion-icon>
+      <ion-label class="label-location">Location</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

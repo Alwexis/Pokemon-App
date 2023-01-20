@@ -1,0 +1,163 @@
+* {
+    transition: all .2s;
+}
+
+.evolutions-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.evolution-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.evolution-pokemon-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2vh 0vh;
+    box-shadow: rgb(0 0 0 / 16%) 0px 1px 4px;
+    width: 90%;
+    & .pkm-container-title {
+        font-size: XX-LARGE;
+        font-weight: 800;
+        font-family: "pokemon xy";
+        text-align: center;
+        text-transform: capitalize;
+    }
+    & .pkmn-container-body {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-evenly;
+        padding-bottom: 2.5vh;
+        & .pokemon-image {    
+            width: 16vh;
+            height: 16vh;
+        }
+        & .pkm-container-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            & p {
+                color: var(--ion-card-color, var(--ion-item-color, var(--ion-color-step-550, #737373)));
+                font-size: 14px;
+                font-weight: normal;
+                line-height: 1.5;
+                margin: 4px;
+            }
+        }
+    }
+}
+
+.evolution-details {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    & ion-icon {
+        width: 8vh;
+        height: 8vh;
+        margin: 1vh;
+        color: var(--ion-color-dark-tint);
+    }
+    & .evolution-details-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        & .evolution-trigger-container {
+            display: flex;
+            align-items: center;
+        }
+        & .evolution-details-container {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            & div {
+                display: flex;
+                align-items: center;
+            }
+        }
+        & .evolution-detail-title {
+            font-size: 2.4vh;
+            font-weight: 600;
+            font-family: "pokemon xy";
+            text-align: center;
+            text-transform: capitalize;
+        }
+        & .evolution-detail-value {
+            font-size: 2vh;
+            font-weight: 100;
+            font-family: "pokemon xy";
+            text-align: center;
+            text-transform: capitalize;
+            color: var(--ion-color-medium);
+            margin: 0;
+            margin-left: 1vh;
+        }
+    }
+}
+
+//? Loading
+.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 32vh 0vh;
+}
+
+.loading ion-icon {
+    width: 16vh;
+    height: 16vh;
+    margin: 1vh;
+    animation-name: loadingPokeball;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+.loading div {
+    font-size: 3.6vh;
+    font-weight: 800;
+    font-family: 'pokemon xy';
+    &:after {
+        content: 'Cargando';
+        animation-name: loadingTxt;
+        animation-duration: 1s;
+        animation-iteration-count: infinite;
+    }
+}
+
+//? Animations
+@keyframes loadingTxt {
+    0%, 25% { content: 'Cargando.'}
+    50% { content: 'Cargando..'}
+    75% { content: 'Cargando...'}
+    100% { content: 'Cargando'}
+}
+
+@keyframes loadingPokeball {
+    0%, 10% { transform: rotate(0deg); }
+    15% { transform: rotate(22.5deg); }
+    20% { transform: rotate(45deg); }
+    25% { transform: rotate(67.5deg); }
+    30% { transform: rotate(90deg); }
+    35% { transform: rotate(112.5deg); }
+    40% { transform: rotate(135deg); }
+    45% { transform: rotate(157.5deg); }
+    50% { transform: rotate(180deg); }
+    55% { transform: rotate(202.5deg); }
+    60% { transform: rotate(225deg); }
+    65% { transform: rotate(247.5deg); }
+    70% { transform: rotate(270deg); }
+    75% { transform: rotate(292.5deg); }
+    80% { transform: rotate(315deg); }
+    85% { transform: rotate(337.5deg); }
+    90%, 100% { transform: rotate(360deg); }
+}
+//? End of Loading

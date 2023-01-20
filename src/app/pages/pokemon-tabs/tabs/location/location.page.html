@@ -1,0 +1,90 @@
+<ion-header>
+  <img src="{{pokemonData.sprites.front_default}}">
+  <span>{{pokemonData.fixedName}}</span>
+</ion-header>
+
+<ion-content>
+  <section style="width: 100%; height: 100%;" *ngIf="!loading else Loading">
+    <ion-list *ngIf="locations.length > 0 else NoEncounters;">
+      <ion-card class="location" *ngFor="let location of locations">
+        <ion-card-header class="location-card-header">
+          <ion-card-title>{{location.name}}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content class="locations-content">
+          <ion-icon *ngIf="location.versionDetails.length > 1" name="chevron-back" class="swiper-controller"
+            (click)="swiperControllerHandler(location.id, false)"></ion-icon>
+          <swiper [loop]="true" [allowTouchMove]="false" [autoplay]="true" [pagination]="true"
+            (slideChange)="didChangeVersion()"
+            (swiper)="handleSwiperInstances($event, location.id)">
+            <ng-template swiperSlide *ngFor="let version of location.versionDetails">
+              <ion-card class="version-detail">
+                <ion-card-header>
+                  <ion-card-title>
+                    <img src="./../../../../assets/icons/versions/{{version.name}}.png">
+                    Pokémon {{version.fixedName}}</ion-card-title>
+                  <ion-card-subtitle>Game</ion-card-subtitle>
+                </ion-card-header>
+                <ion-card-content>
+                  <div class="max-chance-text">
+                    <span>Max chance: </span>
+                    <p>{{version.max_chance}}%</p>
+                  </div>
+                  <span (click)="showVersionDetails(version.id, $event)">Version's encounter details <ion-icon
+                      name="caret-forward"></ion-icon></span>
+                  <ion-list style="padding: 0;" *ngIf="actualVersion === version.id">
+                    <swiper [autoplay]="true" [pagination]="true">
+                      <ng-template swiperSlide *ngFor="let detail of version.encounter_details">
+                        <ion-item lines="none" style="width: 100%;">
+                          <ion-label style="padding-bottom: 4vh; margin-bottom: 0;">
+                            <div class="encounter-detail-text">
+                              <span>Method: </span>
+                              <p>{{detail.method}}</p>
+                            </div>
+                            <div class="encounter-detail-text">
+                              <span>Chance: </span>
+                              <p>{{detail.chance}}%</p>
+                            </div>
+                            <div class="encounter-detail-text">
+                              <span>Min Level: </span>
+                              <p>{{detail.min_level}}</p>
+                            </div>
+                            <div class="encounter-detail-text">
+                              <span>Max Level: </span>
+                              <p>{{detail.max_level}}</p>
+                            </div>
+                            <!--
+                            <section class="conditions" *ngIf="detail.conditions.length > 0">
+                              <span>Conditions:</span>
+                              <div>
+                                <p *ngFor="let condition of detail.conditions">- {{condition}}</p>
+                              </div>
+                            </section>
+                            -->
+                          </ion-label>
+                        </ion-item>
+                      </ng-template>
+                    </swiper>
+                  </ion-list>
+                </ion-card-content>
+              </ion-card>
+            </ng-template>
+          </swiper>
+          <ion-icon *ngIf="location.versionDetails.length > 1" name="chevron-forward" class="swiper-controller"
+          (click)="swiperControllerHandler(location.id, true)"></ion-icon>
+        </ion-card-content>
+      </ion-card>
+    </ion-list>
+    <ng-template #NoEncounters>
+      <div class="error-no-encounters">
+        <ion-icon name="alert-circle"></ion-icon>
+        <span>This pokemon cannot be found in the wild.</span>
+      </div>
+    </ng-template>
+  </section>
+  <ng-template #Loading>
+    <div class="loading">
+      <ion-icon src="./../../../assets/icons/pokeball.svg"></ion-icon>
+      <div></div>
+    </div>
+  </ng-template>
+</ion-content>

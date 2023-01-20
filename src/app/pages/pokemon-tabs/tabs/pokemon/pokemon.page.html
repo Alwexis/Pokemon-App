@@ -1,0 +1,151 @@
+<ion-content fullscreen id="content" class="ion-padding">
+  <div class="content" *ngIf="!loading else Loading;">
+    <!--? Pokeball Bg -->
+    <ion-icon src="./../../../assets/icons/pokeball.svg" class="pokeball-bg"></ion-icon>
+    <section class="header">
+      <ion-icon src="./../../../assets/icons/pokeball.svg"></ion-icon>
+      <span>{{specieData.fixedName}} #{{pokemonData.id}}</span>
+      <ion-button class="pokemon-cry" (click)="playPokemonCry()" [disabled]="!isOnline || isPlayingCry" fill="clear" size="small">
+        <ion-icon slot="icon-only" name="volume-high-outline"></ion-icon>
+      </ion-button>
+    </section>
+    <section class="image">
+      <swiper>
+        <ng-template swiperSlide *ngFor="let sprite of pokemonData.shownSprites">
+          <img src="{{sprite}}" *ngIf="sprite != null">
+        </ng-template>
+      </swiper>
+      <!--
+        <img src="{{pokemonData.sprites.other.home.front_default}}">
+      -->
+    </section>
+    <section class="types">
+      <div class="type" *ngFor="let type of pokemonData.types">
+        <ion-icon src="./../../../assets/icons/{{type.type.name}}.svg"></ion-icon>
+        <span>{{type.type.fixedName}}</span>
+      </div>
+    </section>
+    <section class="info-bar">
+      <div (click)="changeInfoBar('stats')" id="stats" class="info-option">
+        <span>Stats</span>
+      </div>
+      <div (click)="changeInfoBar('about')" id="about" class="info-option" active="true">
+        <span>About</span>
+      </div>
+      <div (click)="changeInfoBar('types')" id="types" class="info-option">
+        <span>Types</span>
+      </div>
+    </section>
+    <section class="info-section info-section-about" *ngIf="activeBar == 'about'">
+      <div class="about-description" style="border-bottom: 1px solid; border-radius: 2vh;">
+        <p>"{{pokemonData.pokedex_entry}}"</p>
+      </div>
+      <section class="general-info">
+        <section class="general-info-row">
+          <div class="info-container exp-growth-rate">
+            <div class="base-exp">
+              <span class="info-title">Base Experience</span> <span
+                class="info-text">{{pokemonData.base_experience}}</span>
+            </div>
+            <div class="growth-rate">
+              <span class="info-title">Growth Rate</span> <span
+                class="info-text">{{specieData.growth_rate.fixedName}}</span>
+            </div>
+          </div>
+          <div class="info-container weight-height">
+            <div class="weight">
+              <span class="info-title">Weight</span> <span class="info-text">{{pokemonData.weight / 10}}kg</span>
+            </div>
+            <div class="height">
+              <span class="info-title">Height</span> <span class="info-text">{{pokemonData.height / 10}}m</span>
+            </div>
+          </div>
+        </section>
+        <section class="general-info-row">
+          <div class="info-container egg-groups-hatch-count">
+            <div class="egg-groups">
+              <span class="info-title">Egg Groups</span> <span
+                class="info-text">{{specieData.egg_groups.asString}}</span>
+            </div>
+            <div class="hatch-count">
+              <span class="info-title">Hatch Count</span> <span class="info-text">{{specieData.hatch_counter}}
+                steps</span>
+            </div>
+          </div>
+          <div class="info-container hapiness-generation">
+            <div class="happiness">
+              <span class="info-title">Happiness</span> <span class="info-text">{{specieData.base_happiness}}</span>
+            </div>
+            <div class="generation">
+              <span class="info-title">Generation</span> <span
+                class="info-text">{{specieData.generation.fixedName}}</span>
+            </div>
+          </div>
+        </section>
+      </section>
+    </section>
+    <section class="info-section info-section-stats" *ngIf="activeBar == 'stats'" style="width: 100%;">
+      <div class="stats">
+        <div class="stat" *ngFor="let stat of pokemonData.stats">
+          <span class="stat-name">{{stat.fixedName}}</span>
+          <div class="stat-bar">
+            <div class="stat-bar-value" [style.width]="stat.percent + '%'" [style.background]="stat.color"></div>
+          </div>
+          <span class="stat-value">{{stat.base_stat}}</span>
+        </div>
+      </div>
+    </section>
+    <section class="info-section info-section-types" *ngIf="activeBar == 'types'" style="width: 100%;">
+      <section class="to-opponent">
+        <span class="info-title" style="margin-bottom: 1vh; border-bottom: 1px solid;">To an oponent</span>
+        <div class="double_to types-container">
+          <span class="info-title" style="font-size: 2.4vh; margin: 0vh 1vh;">X2</span>
+          <div class="type" *ngFor="let type of typeRelations.double_to">
+            <ion-icon src="./../../../assets/icons/{{type}}.svg"></ion-icon>
+          </div>
+        </div>
+        <div class="half_to types-container">
+          <span class="info-title" style="font-size: 2.4vh; margin: 0vh 1vh;">X1/2</span>
+          <div class="type" *ngFor="let type of typeRelations.half_to">
+            <ion-icon src="./../../../assets/icons/{{type}}.svg"></ion-icon>
+          </div>
+        </div>
+        <div class="no_to types-container">
+          <span class="info-title" style="font-size: 2.4vh; margin: 0vh 1vh;">X0</span>
+          <div class="type" *ngFor="let type of typeRelations.no_to">
+            <ion-icon src="./../../../assets/icons/{{type}}.svg"></ion-icon>
+          </div>
+        </div>
+      </section>
+      <section class="from-opponent">
+        <span class="info-title" style="margin-bottom: 1vh; border-bottom: 1px solid;">From an oponent</span>
+        <div class="double_from types-container">
+          <span class="info-title" style="font-size: 2.4vh; margin: 0vh 1vh;">X2</span>
+          <div class="type" *ngFor="let type of typeRelations.double_from">
+            <ion-icon src="./../../../assets/icons/{{type}}.svg"></ion-icon>
+          </div>
+        </div>
+        <div class="half_from types-container">
+          <span class="info-title" style="font-size: 2.4vh; margin: 0vh 1vh;">X1/2</span>
+          <div class="type" *ngFor="let type of typeRelations.half_from">
+            <ion-icon src="./../../../assets/icons/{{type}}.svg"></ion-icon>
+          </div>
+        </div>
+        <div class="no_from types-container">
+          <span class="info-title" style="font-size: 2.4vh; margin: 0vh 1vh;">X0</span>
+          <div class="type" *ngFor="let type of typeRelations.no_from">
+            <ion-icon src="./../../../assets/icons/{{type}}.svg"></ion-icon>
+          </div>
+        </div>
+      </section>
+    </section>
+  </div>
+  <!--? Loading Template -->
+  <ng-template #Loading>
+    <div class="loading">
+      <ion-icon src="./../../../assets/icons/pokeball.svg"></ion-icon>
+      <div></div>
+    </div>
+  </ng-template>
+  <!--? End Loading Template -->
+</ion-content>

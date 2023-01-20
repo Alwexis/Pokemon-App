@@ -1,0 +1,88 @@
+<ion-header>
+  <img src="{{pokemonData.sprites.front_default}}">
+  <span>{{pokemonData.fixedName}}</span>
+</ion-header>
+
+<ion-content id="content" class="ion-padding">
+  <div class="content" *ngIf="!loading else Loading;">
+    <!--? Pokeball Bg -->
+    <ion-icon src="./../../../assets/icons/pokeball.svg" class="pokeball-bg"></ion-icon>
+    <ion-icon src="./../../../assets/icons/pokeball.svg" class="pokeball-bg"></ion-icon>
+    <ion-icon src="./../../../assets/icons/pokeball.svg" class="pokeball-bg"></ion-icon>
+    <!--? End of Pokeball Bg -->
+    <section class="movements">
+      <ion-list class="movement" active="false" *ngFor="let move of movements">
+        <ion-item lines="full" detail="true" button (click)="showMovementDetails(move.id, $event)">
+          <ion-label>
+            <h3><img src="./../../../assets/icons/category/{{move.category}}.png"><ion-icon src="./../../../assets/icons/{{move.type}}.svg"></ion-icon>{{move.fixedName}}</h3>
+            <p>See details for {{move.fixedName}}</p>
+          </ion-label>
+        </ion-item>
+        <ion-item *ngIf="seeingMovement == move.id" class="movement-details" (click)="showMovementDetails(move.id, $event)">
+          <ion-label>
+            <section class="movement-description">
+              <p>{{move.description}}</p>
+            </section>
+            <section class="movement-general-info">
+              <div>
+                <h3>Power</h3>
+                <span>{{move.power}}</span>
+              </div>
+              <div>
+                <h3>Accuracy</h3>
+                <span>{{move.accuracy}}%</span>
+              </div>
+              <div>
+                <h3>PP</h3>
+                <span>{{move.pp}}</span>
+              </div>
+            </section>
+            <section class="movement-version-details">
+              <span>Versions Details</span>
+              <swiper [pagination]="true" [autoplay]="true">
+                <ng-template class="swiper-slide-template" swiperSlide
+                  *ngFor="let version of move.versionDetails">
+                  <div style="display: flex !important; flex-direction: column !important; margin-top: 1.5vh;">
+                    <span>{{version.fixedVersion}}</span>
+                    <div class="movement-version-detail">
+                      <img src="./../../../assets/icons/versions/{{version.version}}.png">
+                      <div>
+                        <p>Level learned: {{version.level_learned_at}}</p>
+                        <p>Learn method: {{version.learn_method}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+              </swiper>
+            </section>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+      <!--
+      <ion-list class="movement-list">
+        <ion-list class="movement" active="false" *ngFor="let move of movements">
+          <ion-item detail="true" button (click)="showMovementDetails(move.id, $event)">
+            <ion-label>
+              <h3><ion-icon src="./../../../assets/icons/{{move.type}}.svg"></ion-icon>{{move.fixedName}}</h3>
+              <p>See details for {{move.fixedName}}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item *ngIf="seeingMovement == move.id">
+            <ion-label>
+              Hola
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-list>
+      -->
+    </section>
+  </div>
+  <!--? Loading Template -->
+  <ng-template #Loading>
+    <div class="loading">
+      <ion-icon src="./../../../assets/icons/pokeball.svg"></ion-icon>
+      <div></div>
+    </div>
+  </ng-template>
+  <!--? End Loading Template -->
+</ion-content>

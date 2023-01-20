@@ -1,0 +1,255 @@
+@import url('./../../../../app.component.scss');
+
+* {
+    transition: all .2s;
+}
+
+#content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+ion-content::part(background) {
+    background: radial-gradient(circle at bottom, rgb(255, 255, 255) 55%, var(--actual-type-color) 60%) !important
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 6vh;
+    font-family: "pokemon xy";
+}
+
+.content .pokeball-bg {
+    position: absolute;
+    left: 0; 
+    right: 0; 
+    top: -2vh;
+    margin-left: auto; 
+    margin-right: auto; 
+    z-index: -1;
+    width: 48vh;
+    height: 48vh;
+    fill: var(--actual-type-color-text);
+    opacity: 0.2;
+    transform: rotate(-45deg);
+}
+
+.content .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--actual-type-color-text);
+    font-size: 3.5vh;
+    background-color: rgba(100, 100, 100, 0.6);
+    border-radius: 2vh;
+    padding: 1vh 1vh;
+    width: 90%;
+}
+
+.content .header * {
+    margin: 0vh 1vh 0vh 1vh;
+}
+
+.content .header ion-icon:not([name="volume-high-outline"]) {
+    //fill: black;
+    transform: rotate(-45deg);
+}
+
+.pokemon-cry {
+    margin: 0;
+    --color: var(--actual-type-color-text);
+    --padding-start: 0;
+    --padding-end: 0;
+}
+
+.content .image {
+    margin-top: 0.5vh;
+    height: 28vh;
+    width: 28vh;
+    & img {
+        height: 100%;
+        width: 100%;
+        filter: drop-shadow(0px 2px 6px #000);
+        margin-top: 2vh;
+    }
+}
+
+.content .types {
+    display: flex;
+    align-items: center;
+    margin-top: 4vh;
+    font-size: 3vh;
+    padding: 1vh 2vh;
+    border-top: 1px solid rgba(100, 100, 100, 0.6);
+    border-bottom: 1px solid rgba(100, 100, 100, 0.6);
+    & .type {
+        display: flex;
+        align-items: center;
+        align-content: center;
+        margin: 0vh 1.5vh;
+        & ion-icon {
+            margin-right: 1.25vh;
+            margin-top: 0.25vh;
+        }
+    }
+}
+
+.content .info-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    margin: 1vh 0vh;
+    & .info-option {
+        padding: 1.5vh 2vh;
+        margin: 0vh 1vh;
+    }
+    & .info-option[active=true] {
+        border-bottom: 2px solid;
+        border-color: var(--actual-type-color-selected);
+    }
+}
+
+.about-description p {
+    max-width: 64vh;
+    text-align: center;
+    word-break: break-word;
+    font-style: italic;
+}
+
+.general-info {
+    display: flex;
+    margin-top: 1vh;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+.general-info-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.info-title {
+    font-weight: bold;
+    color: gray;
+}
+
+.info-text {
+    margin: 0vh 1vh;
+}
+
+.info-container {
+    display: flex;
+    flex-direction: column;
+    margin: 0.5vh 0vh;
+}
+
+.info-section {
+    opacity: 0;
+}
+
+.stats {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.stat {
+    display: flex;
+    width: 100%;
+    margin: 0.9vh 0vh;
+    justify-content: space-between;
+    & .stat-bar {
+        border-radius: 2vh;
+        width: 70%;
+        background: #E5E5E5;
+        margin: 0vh 2vh;
+        z-index: 0;
+        & .stat-bar-value {
+            border-radius: 2vh;
+            height: 100%;
+            z-index: 1;
+        }
+    }
+}
+
+.types-container {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 0.5vh 0vh;
+    &:first-child {
+        margin-top: 2vh;
+    }
+    & .type {
+        margin: 0vh 0.25vh;
+        & ion-icon {
+            width: 2.6vh;
+            height: 2.6vh;
+        }
+    }
+}
+
+//? Loading
+.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 32vh 0vh;
+}
+
+.loading ion-icon {
+    width: 16vh;
+    height: 16vh;
+    margin: 1vh;
+    animation-name: loadingPokeball;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+.loading div {
+    font-size: 3.6vh;
+    font-weight: 800;
+    font-family: 'pokemon xy';
+    &:after {
+        content: 'Cargando';
+        animation-name: loadingTxt;
+        animation-duration: 1s;
+        animation-iteration-count: infinite;
+    }
+}
+
+//? Animations
+@keyframes loadingTxt {
+    0%, 25% { content: 'Cargando.'}
+    50% { content: 'Cargando..'}
+    75% { content: 'Cargando...'}
+    100% { content: 'Cargando'}
+}
+
+@keyframes loadingPokeball {
+    0%, 10% { transform: rotate(0deg); }
+    15% { transform: rotate(22.5deg); }
+    20% { transform: rotate(45deg); }
+    25% { transform: rotate(67.5deg); }
+    30% { transform: rotate(90deg); }
+    35% { transform: rotate(112.5deg); }
+    40% { transform: rotate(135deg); }
+    45% { transform: rotate(157.5deg); }
+    50% { transform: rotate(180deg); }
+    55% { transform: rotate(202.5deg); }
+    60% { transform: rotate(225deg); }
+    65% { transform: rotate(247.5deg); }
+    70% { transform: rotate(270deg); }
+    75% { transform: rotate(292.5deg); }
+    80% { transform: rotate(315deg); }
+    85% { transform: rotate(337.5deg); }
+    90%, 100% { transform: rotate(360deg); }
+}

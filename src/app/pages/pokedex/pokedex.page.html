@@ -1,0 +1,51 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <section id="pokemon-wrapper" *ngIf="loading == false; else Loading;">
+    <ion-searchbar [debounce]="500" show-clear-button="always" placeholder="Pikachu, Charmander, Oddish, Eevee"
+    (ionChange)="searchBarHandler($event)"></ion-searchbar>
+    <div (click)="seePokemonDetails(pokemon.value.id)" class="pokemon ion-activatable"
+    *ngFor="let pokemon of pokemonList | keyvalue : indexOrderAsc;">
+      <ion-ripple-effect></ion-ripple-effect>
+      <div class="pokemon-header">
+        <ion-icon size="large" name="heart-outline"></ion-icon>
+        <span class="pokemon-id">#{{pokemon.key}}</span>
+      </div>
+      <ion-img [src]="pokemon.value.image"></ion-img>
+      <div class="pokemon-types">
+        <div *ngFor="let type of pokemon.value.types">
+          <ion-icon *ngIf="type != ''" src="./../../../assets/icons/{{type}}.svg"></ion-icon>
+        </div>
+      </div>
+      <span class="pokemon-name">
+        {{pokemon.value.name}}
+      </span>
+    </div>
+  </section>
+  <ng-template #Loading>
+    <div class="loading">
+      <ion-icon src="./../../../assets/icons/pokeball.svg"></ion-icon>
+      <div></div>
+    </div>
+  </ng-template>
+  <!--? Filtros -->
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button [disabled]="loading" (click)="openGenerationFilter()">
+      <ion-icon name="filter-circle"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-select mode="ios" (ionChange)="onSelectionChange()" value="1" [multiple]="true" id="generation-filter" #generationFilter>
+    <ion-select-option value="1">I. Generación</ion-select-option>
+    <ion-select-option value="2">II. Generación</ion-select-option>
+    <ion-select-option value="3">III. Generación</ion-select-option>
+    <ion-select-option value="4">IV. Generación</ion-select-option>
+    <ion-select-option value="5">V. Generación</ion-select-option>
+    <ion-select-option value="6">VI. Generación</ion-select-option>
+    <ion-select-option value="7">VII. Generación</ion-select-option>
+    <ion-select-option value="8">VIII. Generación</ion-select-option>
+  </ion-select>
+  <!--? Fin Filtros -->
+</ion-content>

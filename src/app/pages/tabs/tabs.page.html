@@ -1,0 +1,89 @@
+<ion-header [translucent]="true">
+  <ion-toolbar mode="ios" color="danger">
+    <ion-title>
+      Pokédex
+    </ion-title>
+    <ion-buttons slot="end" class="ion-padding">
+      <ion-button (click)="turnSettingsModal()">
+        <ion-icon name="settings-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-tabs (ionTabsWillChange)="tabChange($event)">
+  <ion-tab-bar selected-tab="pokedex" mode="ios" slot="bottom">
+    <ion-tab-button tab="favorite">
+      <ion-icon name="heart"></ion-icon>
+      <ion-label class="label-favorite">Favorite</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="pokedex">
+      <ion-icon style="width: 6vh; height: 6vh;" src="./../../../assets/icons/pokeball.svg"></ion-icon>
+      <ion-label class="label-pokedex">Pokédex</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="games">
+      <ion-icon name="game-controller"></ion-icon>
+      <ion-label class="label-games">Games</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>
+
+<!--? Modal -->
+<ion-modal [isOpen]="settingsModal">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Settings</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="turnSettingsModal()">Close</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <form #settingsForm="ngForm" (ngSubmit)="onSettingsSubmit()">
+        <ion-item>
+          <ion-label>Language</ion-label>
+          <ion-select placeholder="Select Language" name="language" [(ngModel)]="settingsInputs.language">
+            <ion-select-option value="en">English</ion-select-option>
+            <ion-select-option value="es">Español</ion-select-option>
+            <ion-select-option value="pt-BR">Português</ion-select-option>
+            <ion-select-option value="it">Italiano</ion-select-option>
+            <ion-select-option value="fr">Français</ion-select-option>
+            <ion-select-option value="de">Deutsch</ion-select-option>
+            <ion-select-option value="ja">ヒトカゲ</ion-select-option>
+            <ion-select-option value="ko">한국인</ion-select-option>
+          </ion-select>
+          <ion-note slot="helper">Some text won't be translated, for example, the game's name</ion-note>
+        </ion-item>
+        <ion-item>
+          <ion-label>Save Favorite Pokemon in Cache</ion-label>
+          <ion-toggle name="saveFavoriteInCache" [(ngModel)]="settingsInputs.saveFavoriteInCache" [checked]="settingsInputs.saveFavoriteInCache" slot="end"></ion-toggle>
+          <ion-note slot="helper">
+            The complete data of your favorite Pokemon will be saved in cache.
+          </ion-note>
+        </ion-item>
+        <ion-item>
+          <ion-label>Save Pokedex Info in Cache</ion-label>
+          <ion-toggle disabled name="savePokemonInCache" [(ngModel)]="settingsInputs.savePokemonInCache" [checked]="settingsInputs.savePokemonInCache" slot="end"></ion-toggle>
+          <ion-note slot="helper">
+            Basic data from all Pokemon will be saved in cache.
+            <p style="color: var(--ion-color-danger)">Soon</p>
+          </ion-note>
+        </ion-item>
+        <ion-item>
+          <ion-label>Save Game Score</ion-label>
+          <ion-toggle name="saveGameScore" [(ngModel)]="settingsInputs.saveGameScore" [checked]="settingsInputs.saveGameScore" slot="end"></ion-toggle>
+          <ion-note slot="helper">
+            Your game scores will be saved in cache.
+          </ion-note>
+        </ion-item>
+        <ion-button color="danger" expand="block" class="ion-margin-top ion-margin-bottom">
+          Clear Cache
+        </ion-button>
+        <ion-button expand="block" class="ion-margin-top" type="submit">
+          Save
+        </ion-button>
+      </form>
+    </ion-content>
+  </ng-template>
+</ion-modal>

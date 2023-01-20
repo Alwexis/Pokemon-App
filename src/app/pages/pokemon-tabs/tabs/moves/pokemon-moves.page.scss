@@ -1,0 +1,248 @@
+@import url('./../../../../app.component.scss');
+
+$movementSelected: var(--movementSelected);
+
+* {
+    transition: all .2s;
+}
+
+#content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+ion-header {
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--actual-type-color-text);
+    background: var(--actual-type-color);
+    & img {
+        width: 12vh;
+        height: 12vh;
+        filter: drop-shadow(0px 2px 6px #000);
+    }
+    & span {
+        font-size: 3vh;
+    }
+}
+
+ion-virtual-scroll {
+    margin-top: 4.5vh
+}
+
+ion-back-button {
+    color: none !important;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: "pokemon xy";
+    & .pokeball-bg {
+        position: fixed;
+        z-index: -1;
+        width: 32vh;
+        height: 32vh;
+        /* fill: var(--actual-type-color-text); */
+        opacity: 0.1;
+    }
+    & .pokeball-bg:nth-child(1) {
+        right: -8vh;
+        top: -8vh;
+        transform: rotate(-45deg);
+    }
+    & .pokeball-bg:nth-child(2) {
+        left: -8vh;
+        top: 32vh;
+        transform: rotate(45deg);
+    }
+    & .pokeball-bg:nth-child(3) {
+        right: -8vh;
+        bottom: -8vh;
+        transform: rotate(-45deg);
+    }
+}
+
+.header {
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--actual-type-color-text);
+    background: var(--actual-type-color);
+    width: 100%;
+    height: 14%;
+    & img {
+        width: 12vh;
+        height: 12vh;
+        filter: drop-shadow(0px 2px 6px #000);
+    }
+    & span {
+        font-size: 3vh;
+    }
+}
+
+.movements {
+    width: 100%;
+    & :first-child {
+        border-radius: 2vh 2vh 0vh 0vh;
+    }
+    & :last-child {
+        border-radius: 0vh 0vh 2vh 2vh;
+    }
+}
+
+.movement[active=false] {
+    opacity: 0.85;
+    filter: brightness(92%);
+}
+
+.movement[active=true] {
+    opacity: 1;
+    filter: brightness(100%);
+}
+
+.movement-details {
+    height: 0px;
+    & ion-label {
+        word-break: break-word;
+        white-space: pre-wrap;
+    }
+}
+
+.movement-general-info {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    align-content: center;
+    border-bottom: 1px solid;
+    padding-bottom: 1vh;
+    margin-bottom: 1vh;
+    & div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        align-content: center;
+    }
+}
+
+.movement-description {
+    border-top: 1px groove;
+    & p {
+        padding: 1.5vh 0vh 1vh 0vh;
+        margin: 0vh 0vh 1vh 0vh;
+    }
+}
+
+.movement-version-details {
+    margin: 2vh 0vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    & swiper {
+        width: 100%;
+        margin-top: 0.25vh;
+        padding-bottom: 4.5vh;
+    }
+}
+
+.movement-version-detail {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    margin: 1vh 0vh;
+    & img {
+        width: 4vh;
+        height: 4vh;
+    }
+    & div {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin: 0vh 1.5vh;
+    }
+}
+
+ion-label h3 {
+    display: flex;
+    align-items: center;
+    font-weight: 800;
+    font-size: 2.4vh;
+    & img {
+        width: 3vh;
+        height: 3vh;
+        margin-right: 1vh;
+    }
+    & ion-icon {
+        margin: 0vh 1vh 0vh 0vh;
+        width: 3vh;
+        height: 3vh;
+    }
+}
+
+//? Loading
+.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 32vh 0vh;
+}
+
+.loading ion-icon {
+    width: 16vh;
+    height: 16vh;
+    margin: 1vh;
+    animation-name: loadingPokeball;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+.loading div {
+    font-size: 3.6vh;
+    font-weight: 800;
+    font-family: 'pokemon xy';
+    &:after {
+        content: 'Cargando';
+        animation-name: loadingTxt;
+        animation-duration: 1s;
+        animation-iteration-count: infinite;
+    }
+}
+
+//? Animations
+@keyframes loadingTxt {
+    0%, 25% { content: 'Cargando.'}
+    50% { content: 'Cargando..'}
+    75% { content: 'Cargando...'}
+    100% { content: 'Cargando'}
+}
+
+@keyframes loadingPokeball {
+    0%, 10% { transform: rotate(0deg); }
+    15% { transform: rotate(22.5deg); }
+    20% { transform: rotate(45deg); }
+    25% { transform: rotate(67.5deg); }
+    30% { transform: rotate(90deg); }
+    35% { transform: rotate(112.5deg); }
+    40% { transform: rotate(135deg); }
+    45% { transform: rotate(157.5deg); }
+    50% { transform: rotate(180deg); }
+    55% { transform: rotate(202.5deg); }
+    60% { transform: rotate(225deg); }
+    65% { transform: rotate(247.5deg); }
+    70% { transform: rotate(270deg); }
+    75% { transform: rotate(292.5deg); }
+    80% { transform: rotate(315deg); }
+    85% { transform: rotate(337.5deg); }
+    90%, 100% { transform: rotate(360deg); }
+}
