@@ -23,11 +23,15 @@ export class PokemonService {
   };
   private _evolutionChain: any = {};
   private _config: any = {};
+  private _loadedFromCache: boolean = false;
   
   constructor(private _http: HttpClient, private _cache: CacheService) {}
 
-  async init(id: number) {
+  async init(id: number, saveToFavorite: boolean = false) {
     if (this._instance === null) {
+      if (this._cache.isFavorite(id)) {
+        return await this.initFromCache(id);
+      }
       this._pokemonId = id;
       this._config = await this._cache.getConfig();
       //? Testing firstValueFrom
@@ -84,10 +88,36 @@ export class PokemonService {
       for (let type of this._pokemonData.types) {
         type.type.fixedName = type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1);
       }
+      if (saveToFavorite) {
+        const data = {
+          pokemonData: this._pokemonData,
+          specieData: this._specieData,
+          evolutionChain: this._evolutionChain,
+          typeRelations: this._typeRelations
+        }
+        this.destroy();
+        return data;
+      }
       this._instance = this;
       return true;
     }
     return false;
+  }
+
+  async initFromCache(id: number) {
+    this._pokemonId = id;
+    const completeData: any = await this._cache.getFavorite(id); 
+    this._pokemonData = completeData.pokemonData;
+    this._specieData = completeData.specieData;
+    this._evolutionChain = completeData.evolutionChain;
+    this._typeRelations = completeData.typeRelations;
+    this._instance = this;
+    this._loadedFromCache = true;
+    return true;
+  }
+
+  isLoadedFromCache() {
+    return this._loadedFromCache;
   }
 
   getPokemonData() {
@@ -137,6 +167,7 @@ export class PokemonService {
   }
 
   destroy() {
+    this._loadedFromCache = false;
     this._instance = null;
     this._pokemonId = NaN;
     this._pokemonData = {};

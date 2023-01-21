@@ -16,7 +16,7 @@ ion-content {
     padding: 2vh 1vh;
 }
 
-.pokemon {
+.pokemon-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -29,6 +29,12 @@ ion-content {
     // To do ripple effect
     position: relative;
     overflow: hidden;
+}
+
+.pokemon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .pokemon-header {

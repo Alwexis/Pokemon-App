@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AnimationController } from '@ionic/angular';
 import { Util } from 'src/app/classes/util';
 import { CacheService } from 'src/app/services/cache.service';
+import { NetworkService } from 'src/app/services/network.service';
 import { PokemonService } from 'src/app/services/pokemon.service';
 
 @Component({
@@ -18,23 +19,29 @@ export class PokemonPage implements OnInit, OnDestroy {
   typeRelations: any;
   loading: boolean = true;
   activeBar = 'about';
-  isOnline: boolean= false;
+  isOnline: boolean = false;
+  loaded: boolean = false;
   isPlayingCry: boolean = false;
 
   constructor(private _pokemonService: PokemonService, private _cache: CacheService,
     private _route: ActivatedRoute, private _router: Router,
-    private _animationCtrl: AnimationController) {
-      this.isOnline = true;
-      this._route.queryParams.subscribe(params => {
-        if (this._router.getCurrentNavigation()?.extras.state) {
-          const extrasState: any = this._router.getCurrentNavigation()?.extras.state;
-          this.pokemon = extrasState.pokemonId;
-        }
-      });
+    private _animationCtrl: AnimationController, private _network: NetworkService) {
+    this._network.onNetworkChange.subscribe((status: any) => {
+      this.isOnline = status.connected;
+    });
+    this._route.queryParams.subscribe(params => {
+      if (this._router.getCurrentNavigation()?.extras.state) {
+        const extrasState: any = this._router.getCurrentNavigation()?.extras.state;
+        this.pokemon = extrasState.pokemonId;
+      }
+    });
   }
 
   async ngOnInit() {
+    this.isOnline = await this._network.getNetworkStatus();
+    if (!this._cache.isFavorite(this.pokemon) && !this.isOnline) return;
     this.loading = true;
+    this.loaded = false;
     //! Eliminar esto después
     //await this._pokemonService.init(6);
     await this._pokemonService.init(this.pokemon);
@@ -49,13 +56,14 @@ export class PokemonPage implements OnInit, OnDestroy {
     documentStyle.setProperty('--actual-type-color-selected', `var(--${this.pokemonData.types[0].type.name}-type-selected)`);
     // End DOM
     this.loading = false;
+    this.loaded = true;
     setTimeout(async () => {
       await this.playAnimation('info-section-about');
-    }, 50)
+    }, 50);
   }
 
-  async ngOnDestroy() {
-    await this._pokemonService.destroy();
+  ngOnDestroy() {
+    this._pokemonService.destroy();
   }
 
   async changeInfoBar(newBar: string) {
@@ -93,7 +101,7 @@ export class PokemonPage implements OnInit, OnDestroy {
           this.isPlayingCry = false;
         }, duration);
         return;
-      } catch (e) {}
+      } catch (e) { }
       try {
         cry = new Audio('https://play.pokemonshowdown.com/audio/cries/' + fixedNameForAudio + '.ogg');
         await cry.play();
@@ -101,7 +109,7 @@ export class PokemonPage implements OnInit, OnDestroy {
         setTimeout(() => {
           this.isPlayingCry = false;
         }, duration);
-      } catch (e) {}
+      } catch (e) { }
     }
   }
 }

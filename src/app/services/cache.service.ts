@@ -1,4 +1,7 @@
-import { Injectable, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
+import { Util } from '../classes/util';
 import { Pokemon, PokemonLess } from '../interfaces/pokemon';
 import { StorageService } from './storage.service';
 
@@ -7,7 +10,9 @@ import { StorageService } from './storage.service';
 })
 export class CacheService {
 
-  constructor(private _storage: StorageService) {}
+  private _favorites: any = [];
+
+  constructor(private _storage: StorageService, private _http: HttpClient) {}
 
   //? I decided to create this in order to reduce API calls when filter is applied.
   // I'll work on this later when I build the app on Android.
@@ -23,11 +28,15 @@ export class CacheService {
           saveGameScore: false,
         },
         gameScore: null,
-        favorites: {},
+        favorites: [],
+        favoritesData: {},
         pokemon: {},
         generationsSaved: [],
       });
+      await this.initPokemonCacheData();
     }
+    this._favorites = await this.getFavorites();
+    return true;
   }
 
   //? Config Module //
@@ -66,26 +75,82 @@ export class CacheService {
   }
 
   /**
-   @param { Pokemon } pokemon The pokemon being added to the favorites list.
+   * 
+   * @param { number } id The ID of the pokemon that is being added to favorite list. 
+   * @returns { Object } Returns an Object of Pokemon saved as favorites.
    */
-  async addFavorite(pokemon: Pokemon) {
+  async getFavorite(id: number) {
     const cache = await this._storage.get('cache');
-    if (cache.favorites.findIndex((p: PokemonLess) => p.id === pokemon.id) === -1) {
-      cache.favorites.push(pokemon);
+    if (!cache) {
+      return null;
+    }
+    return cache.favoritesData[id];
+  }
+
+  /**
+   @param { number } id The ID of the pokemon that is being added to favorite list.
+   */
+  async addFavorite(id: number) {
+    const cache = await this._storage.get('cache');
+    const pokemon = cache.pokemon[id]
+    if (pokemon && !cache.favorites.includes(id)) {
+      cache.favorites.push(id);
+      this._favorites = cache.favorites;
+      //cache.favoritesData[id] = await this._pokemonService.init(id, true);
       await this._storage.set('cache', cache);
     }
   }
 
   /**
-   @param { Pokemon } pokemon The pokemon being removed from the favorites list. 
+   @param { number } id The ID of the pokemon being removed from the favorites list. 
    */
-  async removeFavorite(pokemon: Pokemon) {
+  async removeFavorite(id: number) {
     const cache = await this._storage.get('cache');
-    const index = cache.favorites.findIndex((p: Pokemon) => p.id === pokemon.id);
-    if (index !== -1) {
-      cache.favorites.splice(index, 1);
+    //const index = cache.favorites.findIndex((p: Pokemon) => p.id === pokemon.id);
+    if (cache.favorites.includes(id)) {
+      cache.favorites = cache.favorites.filter((p: number) => p !== id);
+      this._favorites = cache.favorites;
+      delete cache.favoritesData[id];
       await this._storage.set('cache', cache);
     }
+  }
+
+  isFavorite(id: number) {
+    return this._favorites.includes(id) ? true : false;
+  }
+
+  async __fetchPokemonToFavorite(id: number, data: any) {
+    const cache = await this._storage.get('cache');
+    if (cache.favorites.includes(id)) {
+      cache.favoritesData[id] = data;
+      await this._storage.set('cache', cache);
+    }
+  }
+
+  async initPokemonCacheData() {
+    const __GENS = [1, 2, 3, 4, 5, 6, 7, 8];
+    let __pokemon: any = {}
+    for (let gen of __GENS) {
+    //__GENS.forEach(async (gen: number) => {
+      const generation: any = await firstValueFrom(this._http.get(Util.getGeneration(gen)))
+      for (let pokemon of generation.results) {
+        const data: any = await firstValueFrom(this._http.get(pokemon.url));
+        const specieData: any = await firstValueFrom(this._http.get(data.species.url));
+        const name = specieData.names.find((name: any) => name.language.name === 'en');
+        const pokemonInstance = {
+          id: data.id,
+          name: name.name,
+          types: data.types.map((type: any) => type.type.name),
+          // image: pokemonData.sprites.front_default,
+          image: data.sprites.other.home.front_default,
+          generation: gen
+        }
+        //await this.addPokemonToCache(pokemonInstance)
+        __pokemon[pokemonInstance.id] = pokemonInstance
+      }
+      //const generationPromise: any = await this._http.get(Util.getGeneration(parseInt(generation))).toPromise();
+    }//);
+    await this.setPokemonCache(__pokemon)
   }
 
   //? Pokemon Module //
@@ -100,13 +165,19 @@ export class CacheService {
     return cache.pokemon;
   }
 
+  async setPokemonCache(data: any) {
+    const cache = await this._storage.get('cache');
+    cache.pokemon = data;
+    await this._storage.set('cache', cache);
+  }
+
   /**
    @param { Pokemon } pokemon The pokemon being added to the cache.
    */
-  async addPokemonToCache(pokemon: Pokemon) {
+  async addPokemonToCache(pokemon: any) {
     const cache = await this._storage.get('cache');
-    if (!cache.pokemon.has(pokemon.id)) {
-      cache.pokemon.set(pokemon.id, pokemon);
+    if (!cache.pokemon[pokemon.id]) {
+      cache.pokemon[pokemon.id] = pokemon;
       await this._storage.set('cache', cache);
     }
   }
@@ -116,16 +187,13 @@ export class CacheService {
    */
   async addManyPokemonToCache(pokemonArray: Array<PokemonLess>) {
     const cache = await this._storage.get('cache');
-    //console.log(Object.keys(pokemonArray))
     Object.keys(pokemonArray).forEach(async (pokemonKey: any) => {
       const pokemon = pokemonArray[pokemonKey];
       console.log(pokemon)
-      if (!cache.pokemon.has(pokemon.id)) {
-        console.log('adding to cache')
-        cache.pokemon.set(pokemon.id, pokemon);
+      if (!cache.pokemon[pokemon.id]) {
+        cache.pokemon[pokemon.id] = pokemon;
       }
     });
-    console.log(cache)
     await this._storage.set('cache', cache);
   }
 
@@ -153,11 +221,21 @@ export class CacheService {
     await this._storage.set('cache', cache);
   }
 
+  /**
+   * @deprecated
+   * @description Not saving generations in cache anymore.
+   * @returns 
+   */
   async getGenerationsSaved() {
     const cache = await this._storage.get('cache');
     return cache.generationsSaved;
   }
 
+  /**
+   * @deprecated
+   * @description Not saving generations in cache anymore.
+   * @returns 
+   */
   async addGenerationSaved(generation: number) {
     const cache = await this._storage.get('cache');
     if (cache.generationsSaved.indexOf(generation) === -1) {
@@ -166,6 +244,11 @@ export class CacheService {
     }
   }
 
+  /**
+   * @deprecated
+   * @description Not saving generations in cache anymore.
+   * @returns 
+   */
   async removeGenerationSaved(generation: number) {
     const cache = await this._storage.get('cache');
     if (generation === 0) {

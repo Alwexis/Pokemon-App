@@ -6,23 +6,28 @@
 <ion-content [fullscreen]="true">
   <section id="pokemon-wrapper" *ngIf="loading == false; else Loading;">
     <ion-searchbar [debounce]="500" show-clear-button="always" placeholder="Pikachu, Charmander, Oddish, Eevee"
-    (ionChange)="searchBarHandler($event)"></ion-searchbar>
-    <div (click)="seePokemonDetails(pokemon.value.id)" class="pokemon ion-activatable"
-    *ngFor="let pokemon of pokemonList | keyvalue : indexOrderAsc;">
-      <ion-ripple-effect></ion-ripple-effect>
+      (ionChange)="searchBarHandler($event)"></ion-searchbar>
+    <div class="pokemon-container" *ngFor="let pokemon of pokemonList | keyvalue : indexOrderAsc;">
       <div class="pokemon-header">
-        <ion-icon size="large" name="heart-outline"></ion-icon>
+        <ion-icon *ngIf="!__isFavorite(pokemon.key) else isFavorite;" size="large" name="heart-outline"
+          (click)="__turnFavorite(pokemon.key)"></ion-icon>
+        <ng-template #isFavorite>
+          <ion-icon (click)="__turnFavorite(pokemon.key)" color="danger" size="large" name="heart"></ion-icon>
+        </ng-template>
         <span class="pokemon-id">#{{pokemon.key}}</span>
       </div>
-      <ion-img [src]="pokemon.value.image"></ion-img>
-      <div class="pokemon-types">
-        <div *ngFor="let type of pokemon.value.types">
-          <ion-icon *ngIf="type != ''" src="./../../../assets/icons/{{type}}.svg"></ion-icon>
+      <div (click)="seePokemonDetails(pokemon.value.id)" class="pokemon ion-activatable">
+        <ion-ripple-effect></ion-ripple-effect>
+        <ion-img [src]="pokemon.value.image"></ion-img>
+        <div class="pokemon-types">
+          <div *ngFor="let type of pokemon.value.types">
+            <ion-icon *ngIf="type != ''" src="./../../../assets/icons/{{type}}.svg"></ion-icon>
+          </div>
         </div>
+        <span class="pokemon-name">
+          {{pokemon.value.name}}
+        </span>
       </div>
-      <span class="pokemon-name">
-        {{pokemon.value.name}}
-      </span>
     </div>
   </section>
   <ng-template #Loading>
@@ -37,7 +42,8 @@
       <ion-icon name="filter-circle"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-  <ion-select mode="ios" (ionChange)="onSelectionChange()" value="1" [multiple]="true" id="generation-filter" #generationFilter>
+  <ion-select mode="ios" (ionChange)="onSelectionChange()" value="1" [multiple]="true" id="generation-filter"
+    #generationFilter>
     <ion-select-option value="1">I. Generación</ion-select-option>
     <ion-select-option value="2">II. Generación</ion-select-option>
     <ion-select-option value="3">III. Generación</ion-select-option>

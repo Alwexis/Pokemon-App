@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AnimationController } from '@ionic/angular';
+import { AlertController, AnimationController } from '@ionic/angular';
 import { CacheService } from 'src/app/services/cache.service';
 
 @Component({
@@ -20,7 +20,8 @@ export class TabsPage implements OnInit {
     saveGameScore: false,
   }
 
-  constructor(private _animCtrl: AnimationController, private _cache: CacheService) {}
+  constructor(private _animCtrl: AnimationController, private _cache: CacheService,
+    private _alertCtrl: AlertController) {}
 
   async ngOnInit() {
     this.config = await this._cache.getConfig();

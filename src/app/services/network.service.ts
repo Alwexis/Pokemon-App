@@ -25,6 +25,7 @@ export class NetworkService {
       this.init();
     }
     const status = await Network.getStatus();
-    return status.connected;
+    //return status.connected;
+    return false;
   }
 }

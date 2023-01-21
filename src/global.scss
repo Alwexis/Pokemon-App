@@ -33,3 +33,8 @@
 @import '~swiper/scss/scrollbar';
 @import '~swiper/scss/zoom';
 @import '~@ionic/angular/css/ionic-swiper';
+
+ion-alert.alert-no-wifi {
+    background: black;
+    --background-opacity: 1;
+}

@@ -8,6 +8,7 @@ import { IonSelect, IonButton, AlertController } from '@ionic/angular';
 import { NavigationExtras, Router } from '@angular/router';
 import { CacheService } from 'src/app/services/cache.service';
 import { NetworkService } from 'src/app/services/network.service';
+import { PokemonService } from 'src/app/services/pokemon.service';
 
 @Component({
   selector: 'app-pokedex',
@@ -21,23 +22,27 @@ export class PokedexPage implements OnInit {
   private _completePokemonList: any = {};
   private _config: any;
   private _networkStatus: any;
+  private _favoritePokemonList: any = {};
   pokemonList: any = {};
   actualGenerations: Array<string> = [];
   loading = false;
 
   constructor(private _http: HttpClient, private _router: Router, private _cache: CacheService,
-    private _alertCtrl: AlertController, private _network: NetworkService) { }
+    private _alertCtrl: AlertController, private _network: NetworkService,
+    private _pokemonService: PokemonService) { }
 
   async ngOnInit() {
     this._config = await this._cache.getConfig();
     this._networkStatus = await this._network.getNetworkStatus();
+    this._favoritePokemonList = await this._cache.getFavorites();
     this.loadPokemons(['1']);
+    this._networkStatus = await this._network.getNetworkStatus();
     if (!this._networkStatus) {
       const alert = await this._alertCtrl.create({
         header: 'No Wi-fi',
-        message: 'You are not connected to Wi-fi, you won\'t be able to play games or load more pokemon.',
-        buttons: ['OK']
-      })
+        message: 'You are not connected to Wi-fi, you won\'t be able to play games or load pokemon details if you don\'t have them in cache (checkout the settings).',
+        buttons: ['OK'],
+      });
       await alert.present();
     }
     this._network.onNetworkChange.subscribe(async (status: any) => {
@@ -45,7 +50,7 @@ export class PokedexPage implements OnInit {
       if (status.connected) {
         const alert = await this._alertCtrl.create({
           header: 'Connected to Wi-fi',
-          message: 'You are now connected to Wi-fi, now you can play games and load more pokemons.',
+          message: 'You are now connected to Wi-fi, now you can play games and load pokemon data.',
           buttons: ['OK']
         })
         await alert.present();
@@ -56,10 +61,52 @@ export class PokedexPage implements OnInit {
   async loadPokemons(generations: Array<string>) {
     if (this.loading) return;
     this.loading = true;
+    const __GENERATIONS = generations.map((generation: any) => parseInt(generation));
     //? Gettin' actual list
-    if (!this._networkStatus) return;
     let pokemonListArray = Array.from(Object.values(this.pokemonList))
     pokemonListArray = pokemonListArray.filter((pokemon: any) => generations.includes(pokemon.generation.toString()));
+    //? Getting new list
+    let cachePokemonList = await this._cache.getPokemonCache();
+    if (!cachePokemonList) {
+      await this._cache.initPokemonCacheData();
+      cachePokemonList = await this._cache.getPokemonCache();
+    }
+    const cachePokemonListArray = Array.from(Object.values(cachePokemonList));
+    const filteredCachePokemon = cachePokemonListArray.filter((pokemon: any) => __GENERATIONS.includes(pokemon.generation));
+    const finalList = filteredCachePokemon.reduce((a: any, v: any) => ({ ...a, [v.id]: v }), {});
+    this.pokemonList = finalList;
+    this._completePokemonList = finalList;
+    this.actualGenerations = generations;
+    this.loading = false;
+  }
+
+  /**
+   * @deprecated
+   * @description This method is deprecated since the new cache system. It will be removed in the future.
+   * @param generations 
+   * @returns 
+   */
+  async _loadPokemons(generations: Array<string>) {
+    if (this.loading) return;
+    this.loading = true;
+    if (!this._networkStatus) return;
+    //? Gettin' actual list
+    let pokemonListArray = Array.from(Object.values(this.pokemonList))
+    pokemonListArray = pokemonListArray.filter((pokemon: any) => generations.includes(pokemon.generation.toString()));
+    //? Getting new list
+    if (this._config.savePokemonInCache) {
+      const cachePokemonList = await this._cache.getPokemonCache();
+      const cachePokemonListArray = Array.from(Object.values(cachePokemonList));
+      generations.forEach((generation: any) => {
+        if (this.actualGenerations.includes(generation)) {
+          const filteredCacheList = cachePokemonListArray.filter((pokemon: any) => pokemon.generation.toString() === generation);
+          if (filteredCacheList) {
+            pokemonListArray = pokemonListArray.concat(filteredCacheList);
+          }
+        }
+      });
+      generations = generations.filter((generation: any) => !this.actualGenerations.includes(generation));
+    }
     //?
     let newPokemonList: any = pokemonListArray.reduce((a: any, v: any) => ({ ...a, [v.id]: v }), {});
     for (let generation of generations) {
@@ -86,6 +133,11 @@ export class PokedexPage implements OnInit {
     this._completePokemonList = newPokemonList;
     this.actualGenerations = generations;
     this.loading = false;
+    if (this._config.savePokemonInCache) {
+      await this._cache.setPokemonCache(newPokemonList);
+    }
+    console.log(this.pokemonList)
+    console.log(this.pokemonList.constructor)
   }
 
   async searchBarHandler(e: any) {
@@ -127,5 +179,35 @@ export class PokedexPage implements OnInit {
       }
     }
     await this.loadPokemons(this.generationFilter?.value);
+  }
+
+  __isFavorite(id: any) {
+    if (typeof id === 'string') id = parseInt(id);
+    return this._cache.isFavorite(id);
+  }
+
+  async __turnFavorite(id: any) {
+    if (typeof id === 'string') id = parseInt(id);
+    if (this.__isFavorite(id)) {
+      this._cache.removeFavorite(id);
+    } else {
+      if (this._networkStatus) {
+        this._cache.addFavorite(id);
+        const pokemonData = await this._pokemonService.init(id, true);
+        this._cache.__fetchPokemonToFavorite(id, pokemonData);
+      } else {
+        const alert = await this._alertCtrl.create({
+          header: 'Error',
+          subHeader: 'No internet connection',
+          message: 'You need to be connected to the internet to add a pokemon to your favorites & download their data.',
+          buttons: ['OK']
+        });
+        await alert.present();
+      }
+    }
+    //this.pokemonList[id].changed = true;
+    //this.pokemonList = this.pokemonList;
+    //this.pokemonList[id] = pokemon;
+    //console.log(this.pokemonList)
   }
 }
