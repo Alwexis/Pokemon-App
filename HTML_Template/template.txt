@@ -1,9 +1,50 @@
 <div class="thumbnails-container">
-  <div class="swiper-wrapper">
-    <div class="swiper-slide">
-      <img src="">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide">
+            <img src="https://github.com/Alwexis/Pokemon-App/blob/main/HTML_Template/assets/home.png?raw=true">
+        </div>
+        <div class="swiper-slide">
+            <img src="https://github.com/Alwexis/Pokemon-App/blob/main/HTML_Template/assets/favorites.png?raw=true">
+        </div>
+        <div class="swiper-slide">
+            <img src="https://github.com/Alwexis/Pokemon-App/blob/main/HTML_Template/assets/games.png?raw=true">
+        </div>
+        <div class="swiper-slide">
+            <img src="https://github.com/Alwexis/Pokemon-App/blob/main/HTML_Template/assets/settings.png?raw=true">
+        </div>
+        <div class="swiper-slide">
+            <img src="https://github.com/Alwexis/Pokemon-App/blob/main/HTML_Template/assets/pokemon_info.png?raw=true">
+        </div>
+        <div class="swiper-slide">
+            <img
+                src="https://github.com/Alwexis/Pokemon-App/blob/main/HTML_Template/assets/pokemon_evolution.png?raw=true">
+        </div>
+        <div class="swiper-slide">
+            <img
+                src="https://github.com/Alwexis/Pokemon-App/blob/main/HTML_Template/assets/pokemon_locations.png?raw=true">
+        </div>
+        <div class="swiper-slide">
+            <img src="https://github.com/Alwexis/Pokemon-App/blob/main/HTML_Template/assets/pokemon_moves.png?raw=true">
+        </div>
     </div>
-  </div>
 </div>
 <div class="content">
+    <p>
+        This is a project that I made for my portfolio, it's a Pokedex app that uses the <a href="https://pokeapi.co"
+            target="_blank">PokeAPI</a> to get all the data.
+        This App was maded using Ionic Framework, Angular and Typescript.
+        Currently this App allows you to see all the pokemons, their stats, evolutions, moves, locations, etc., and you
+        can also add them to your favorites list so you can see them later even if you're not connected to Wi-Fi.
+        I'm currently working on a new and improved version of the App, that adds some typical games using Pokémon as
+        the topic (Tic Tac Toe, Who's That Pokémon, Black Jack, etc).
+
+    <div class="button-container">
+        <a href="https://github.com/Alwexis/Pokemon-App" target="_blank">
+            <button>Source Code</button>
+        </a>
+        <a href="https://www.youtube.com/watch?v=86L_f7WvKEM" target="_blank">
+            <button>Demo (Video)</button>
+        </a>
+    </div>
+    </p>
 </div>
