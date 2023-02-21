@@ -52,7 +52,7 @@
             </svg>
         </a>
         <a href="https://www.youtube.com/watch?v=86L_f7WvKEM" target="_blank">
-            Demo (Video)
+            Demo
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
             viewBox="0 0 16 16">
             <path
