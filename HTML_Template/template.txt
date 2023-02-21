@@ -42,14 +42,14 @@
         can also add them to your favorites list so you can see them later even if you're not connected to Wi-Fi.
         I'm currently working on a new and improved version of the App, that adds some typical games using Pokémon as
         the topic (Tic Tac Toe, Who's That Pokémon, Black Jack, etc).
+    </p>
 
     <div class="button-container">
         <a href="https://github.com/Alwexis/Pokemon-App" target="_blank">
-            <button>Source Code</button>
+            Source Code
         </a>
         <a href="https://www.youtube.com/watch?v=86L_f7WvKEM" target="_blank">
-            <button>Demo (Video)</button>
+            Demo (Video)
         </a>
     </div>
-    </p>
 </div>
