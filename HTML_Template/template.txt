@@ -1,3 +1,4 @@
+<!--
 <div class="thumbnails-container">
     <div class="swiper-wrapper">
         <div class="swiper-slide">
@@ -27,6 +28,10 @@
             <img src="https://github.com/Alwexis/Pokemon-App/blob/main/HTML_Template/assets/pokemon_moves.png?raw=true">
         </div>
     </div>
+</div>
+-->
+<div class="thumbnail">
+  <img src="https://images3.alphacoders.com/981/981784.png">
 </div>
 <div class="content">
     <p>
